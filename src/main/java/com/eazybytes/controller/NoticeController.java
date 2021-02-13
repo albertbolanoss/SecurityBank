@@ -5,11 +5,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
-public class WelcomeController {
-
+@RequestMapping("/notices")
+public class NoticeController {
     @GetMapping
-    public  String sayWelcome() {
-        return "Welcome from Spring Application with out Security";
+    public String getNotices() {
+        return "Notices";
     }
 }
