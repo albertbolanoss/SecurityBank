@@ -1,5 +1,6 @@
 package com.eazybytes.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,10 +10,18 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Value( "${default.password}" )
+    private String defaultPassword;
+
+    @Value( "${default.admin.username}" )
+    private String defaultAdminUsername;
+
+    @Value( "${default.user.username}" )
+    private String defaultUserUsername;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -30,10 +39,14 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
+        // InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
+        CustomInMemoryUserDetailsManager userDetailsService = new CustomInMemoryUserDetailsManager();
 
-        UserDetails admin = User.withUsername("admin").password("12345").authorities("admin").build();
-        UserDetails user = User.withUsername("user").password("12345").authorities("read").build();
+        UserDetails admin = User.withUsername(this.defaultAdminUsername)
+                .password(this.defaultPassword).authorities("admin").build();
+
+        UserDetails user = User.withUsername(this.defaultUserUsername)
+                .password(this.defaultPassword).authorities("read").build();
 
         userDetailsService.createUser(admin);
         userDetailsService.createUser(user);
