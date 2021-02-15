@@ -1,4 +1,4 @@
-package com.eazybytes.config;
+package com.eazybytes.config.inmemory;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

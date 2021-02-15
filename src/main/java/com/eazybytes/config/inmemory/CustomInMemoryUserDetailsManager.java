@@ -1,4 +1,4 @@
-package com.eazybytes.config;
+package com.eazybytes.config.inmemory;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -52,11 +52,8 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
     @Override
     public void changePassword(String oldPassword, String newPassword)  {
         try {
-            Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
-
-            Optional.ofNullable(currentUser).orElseThrow(
-                    () -> new AccessDeniedException("Required authentication"));
-
+            Authentication currentUser = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                    .orElseThrow(() -> new AccessDeniedException("Required authentication"));
             String username = currentUser.getName();
 
 
@@ -82,7 +79,7 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         UserDetails user = Optional.ofNullable(users.get(username)).orElseThrow(
                 () -> new UsernameNotFoundException("No found user"));
 

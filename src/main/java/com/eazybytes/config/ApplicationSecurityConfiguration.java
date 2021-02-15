@@ -1,36 +1,34 @@
 package com.eazybytes.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Value( "${default.password}" )
-    private String defaultPassword;
+    @Autowired
+    @Qualifier("inMemoryUserDetailsManagerImpl")
+    private UserDetailsManagerFactory userDetailsManagerFactory;
 
-    @Value( "${default.admin.username}" )
-    private String defaultAdminUsername;
-
-    @Value( "${default.user.username}" )
-    private String defaultUserUsername;
+    private static final String ADMIN_AUTHORITY = "admin";
+    private static final String READ_AUTHORITY = "read";
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
-            .antMatchers("/myAccount").hasAuthority("admin")
-            .antMatchers("/myBalance").hasAuthority("admin")
-            .antMatchers("myCards").hasAuthority("admin")
-            .antMatchers("/notices").hasAnyAuthority("admin", "read")
-            .antMatchers("/contact").hasAnyAuthority("admin", "read")
+            .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
+            .antMatchers("/myBalance").hasAuthority(ADMIN_AUTHORITY)
+            .antMatchers("myCards").hasAuthority(ADMIN_AUTHORITY)
+            .antMatchers("/notices").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
+            .antMatchers("/contact").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
         .and()
         .formLogin()
         .and()
@@ -39,22 +37,12 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
-        CustomInMemoryUserDetailsManager userDetailsService = new CustomInMemoryUserDetailsManager();
-
-        UserDetails admin = User.withUsername(this.defaultAdminUsername)
-                .password(this.defaultPassword).authorities("admin").build();
-
-        UserDetails user = User.withUsername(this.defaultUserUsername)
-                .password(this.defaultPassword).authorities("read").build();
-
-        userDetailsService.createUser(admin);
-        userDetailsService.createUser(user);
-        auth.userDetailsService(userDetailsService);
+        UserDetailsManager userDetailsManager = this.userDetailsManagerFactory.create();
+        auth.userDetailsService(userDetailsManager);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }
