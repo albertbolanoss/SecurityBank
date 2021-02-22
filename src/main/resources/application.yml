@@ -1,0 +1,7 @@
+default:
+  admin:
+    username: admin
+    password: {default.admin.password}
+  user:
+    username: user
+    password: {default.user.password}
