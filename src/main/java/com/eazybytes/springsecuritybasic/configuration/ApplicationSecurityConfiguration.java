@@ -26,12 +26,15 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         http
         .authorizeRequests()
             .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
+            .antMatchers("/customer").hasAuthority(ADMIN_AUTHORITY)
             .antMatchers("/news").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
             .antMatchers("/").permitAll()
         .and()
         .formLogin()
         .and()
-        .httpBasic();
+        .httpBasic()
+        .and()
+        .csrf().disable();
     }
 
     @Override
