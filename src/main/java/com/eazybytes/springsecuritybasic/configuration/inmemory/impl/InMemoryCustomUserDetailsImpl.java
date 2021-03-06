@@ -1,11 +1,11 @@
-package com.eazybytes.config.inmemory;
+package com.eazybytes.springsecuritybasic.configuration.inmemory.impl;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class CustomUserDetails implements UserDetails {
+public class InMemoryCustomUserDetailsImpl implements UserDetails {
     private String username;
     private String password;
     private boolean isAccountNonExpired;
@@ -14,7 +14,7 @@ public class CustomUserDetails implements UserDetails {
     private boolean isEnabled;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(UserDetails userDetails) {
+    public InMemoryCustomUserDetailsImpl(UserDetails userDetails) {
         this.username = userDetails.getUsername();
         this.password = userDetails.getPassword();
         this.isAccountNonExpired = userDetails.isAccountNonExpired();
