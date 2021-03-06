@@ -1,5 +1,6 @@
-package com.eazybytes.config;
+package com.eazybytes.springsecuritybasic.configuration;
 
+import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,21 +15,19 @@ import org.springframework.security.provisioning.UserDetailsManager;
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
-    @Qualifier("inMemoryUserDetailsManagerImpl")
-    private UserDetailsManagerFactory userDetailsManagerFactory;
+    @Qualifier("inMemoryUserDetailsManagerDemoImpl")
+    private UserDetailsManagerDemo userDetailsManagerDemo;
 
-    private static final String ADMIN_AUTHORITY = "admin";
-    private static final String READ_AUTHORITY = "read";
+    private final String ADMIN_AUTHORITY = AuthorityEnum.ADMIN.getName();
+    private final String READ_AUTHORITY = AuthorityEnum.READ.getName();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         .authorizeRequests()
             .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
-            .antMatchers("/myBalance").hasAuthority(ADMIN_AUTHORITY)
-            .antMatchers("myCards").hasAuthority(ADMIN_AUTHORITY)
-            .antMatchers("/notices").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
-            .antMatchers("/contact").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
+            .antMatchers("/news").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
+            .antMatchers("/").permitAll()
         .and()
         .formLogin()
         .and()
@@ -37,7 +36,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserDetailsManager userDetailsManager = this.userDetailsManagerFactory.create();
+        UserDetailsManager userDetailsManager = this.userDetailsManagerDemo.createUserDetailsManagerDemo();
         auth.userDetailsService(userDetailsManager);
     }
 

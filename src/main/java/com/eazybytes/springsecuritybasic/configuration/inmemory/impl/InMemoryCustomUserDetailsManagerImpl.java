@@ -1,4 +1,4 @@
-package com.eazybytes.config.inmemory;
+package com.eazybytes.springsecuritybasic.configuration.inmemory.impl;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class CustomInMemoryUserDetailsManager implements UserDetailsManager, UserDetailsPasswordService {
+public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager, UserDetailsPasswordService {
     protected final Log logger = LogFactory.getLog(getClass());
-    private final Map<String, CustomUserDetails> users = new HashMap<>();
+    private final Map<String, InMemoryCustomUserDetailsImpl> users = new HashMap<>();
 
     private AuthenticationManager authenticationManager;
 
-    public CustomInMemoryUserDetailsManager(UserDetails... users) {
+    public InMemoryCustomUserDetailsManagerImpl(UserDetails... users) {
         for (UserDetails user : users) {
             createUser(user);
         }
@@ -33,7 +33,7 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
     @Override
     public void createUser(UserDetails user) {
         Assert.isTrue(!userExists(user.getUsername()), "User should not exist");
-        CustomUserDetails userDetails = new CustomUserDetails(user);
+        InMemoryCustomUserDetailsImpl userDetails = new InMemoryCustomUserDetailsImpl(user);
 
         users.put(user.getUsername().toLowerCase(), userDetails);
     }
@@ -41,7 +41,7 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
     @Override
     public void updateUser(UserDetails user) {
         Assert.isTrue(userExists(user.getUsername()), "User should exist");
-        users.put(user.getUsername().toLowerCase(), new CustomUserDetails(user));
+        users.put(user.getUsername().toLowerCase(), new InMemoryCustomUserDetailsImpl(user));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
                 logger.debug("No Authentication Manager");
             }
 
-            CustomUserDetails user = Optional.ofNullable(users.get(username)).orElseThrow(
+            InMemoryCustomUserDetailsImpl user = Optional.ofNullable(users.get(username)).orElseThrow(
                     () -> new IllegalStateException());
             user.setPassword(newPassword);
 
@@ -91,7 +91,7 @@ public class CustomInMemoryUserDetailsManager implements UserDetailsManager, Use
     @Override
     public UserDetails updatePassword(UserDetails user, String newPassword) {
         String username = user.getUsername();
-        CustomUserDetails mutableUser = users.get(username.toLowerCase());
+        InMemoryCustomUserDetailsImpl mutableUser = users.get(username.toLowerCase());
         mutableUser.setPassword(newPassword);
 
         return mutableUser;
