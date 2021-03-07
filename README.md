@@ -2,7 +2,7 @@
 
 This project allows see and learn about the Spring Security configuration.
 
-## Run In Memory User Details Manager 
-1. Create a environment variable name USER_PASS
-1. Go to ApplicationSecurityConfiguration class and change the Qualifier property by the "inMemoryUserDetailsManagerDemoImpl".
-1. Run the application and go to the page http://localhost:8080
+## How run it 
+1. Create an environment variable named "DB_PASS" to the database or set it in application.properties file.
+1. Go to ApplicationSecurityConfiguration class and uncomment an implementation of UserDetailsManager.
+1. Run the application and execute the endpoint http://localhost:8080 with basic authentication

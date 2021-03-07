@@ -19,6 +19,20 @@
             <column name="role" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="enabled" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="create_unique_table" author="lbolanoss">
+        <addUniqueConstraint
+          columnNames="email"
+          constraintName="unique_customer_email"
+          deferrable="true"
+          disabled="false"
+          initiallyDeferred="true"
+          tableName="customer"
+          validate="true"/>
     </changeSet>
 </databaseChangeLog>

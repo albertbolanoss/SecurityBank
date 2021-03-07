@@ -1,8 +1,11 @@
 package com.eazybytes.springsecuritybasic.configuration;
 
+import com.eazybytes.springsecuritybasic.configuration.impl.CustomUserDetailsImpl;
 import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
+import com.eazybytes.springsecuritybasic.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,9 +17,19 @@ import org.springframework.security.provisioning.UserDetailsManager;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
+//    @Autowired
+//    @Qualifier("inMemoryCustomUserDetailsManagerImpl")
+//    private UserDetailsManager userDetailsManager;
+
     @Autowired
-    @Qualifier("inMemoryUserDetailsManagerDemoImpl")
-    private UserDetailsManagerDemo userDetailsManagerDemo;
+    @Qualifier("inJdbcCustomUserDetailsManagerImpl")
+    private UserDetailsManager userDetailsManager;
+
+    @Value( "${default.admin.username}" )
+    private String defaultAdminUsername;
+
+    @Value( "${default.admin.password}" )
+    private String defaultAdminPassword;
 
     private final String ADMIN_AUTHORITY = AuthorityEnum.ADMIN.getName();
     private final String READ_AUTHORITY = AuthorityEnum.READ.getName();
@@ -39,8 +52,14 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserDetailsManager userDetailsManager = this.userDetailsManagerDemo.createUserDetailsManagerDemo();
-        auth.userDetailsService(userDetailsManager);
+        Customer customer = new Customer();
+        customer.setEmail(this.defaultAdminUsername);
+        customer.setPwd(this.defaultAdminPassword);
+        customer.setRole(ADMIN_AUTHORITY);
+        customer.setEnabled(true);
+
+        this.userDetailsManager.createUser(new CustomUserDetailsImpl(customer));
+        auth.userDetailsService(this.userDetailsManager);
     }
 
     @Bean

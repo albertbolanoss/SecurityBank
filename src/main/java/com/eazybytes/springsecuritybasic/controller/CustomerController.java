@@ -24,7 +24,11 @@ public class CustomerController {
 
     @PostMapping("/user")
     public String create(@RequestBody Customer customer) {
-        customerRepository.save(customer);
-        return customerRepository.findByEmail(customer.getEmail()) + " Save successful";
+        if(!customerRepository.existsByEmail(customer.getEmail())) {
+            customerRepository.save(customer);
+            return "Save successful";
+        } else {
+            return "Error the email already exists";
+        }
     }
 }

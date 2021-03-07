@@ -1,5 +1,8 @@
 package com.eazybytes.springsecuritybasic.model;
 
+import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,15 +16,17 @@ public class Customer {
     private String email;
     private String pwd;
     private String role;
+    private Boolean enabled;
 
     public Customer() {
 
     }
 
-    public Customer(String email, String pwd, String role) {
+    public Customer(String email, String pwd, String role, Boolean enabled) {
         this.email = email;
         this.pwd = pwd;
         this.role = role;
+        this.enabled = enabled;
     }
 
     public Long getId() {
@@ -54,5 +59,13 @@ public class Customer {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
