@@ -36,3 +36,9 @@ build/
 .mvn/
 mvnw
 mvnw.cmd
+
+### Windows ###
+*.ini
+
+### Certifcates ###
+*.p12

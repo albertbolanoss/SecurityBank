@@ -57,7 +57,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                 return config;
             }
         })
-        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .and().csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
         .and().authorizeRequests()
             .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
             .antMatchers("/customer").hasAuthority(ADMIN_AUTHORITY)
