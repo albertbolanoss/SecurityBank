@@ -3,6 +3,7 @@ package com.eazybytes.springsecuritybasic.configuration;
 import com.eazybytes.springsecuritybasic.configuration.impl.CustomUserDetailsImpl;
 import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
 import com.eazybytes.springsecuritybasic.model.Customer;
+import org.apache.tomcat.util.file.ConfigurationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -36,8 +43,22 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
-        .authorizeRequests()
+        .cors().configurationSource(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                config.setAllowedMethods(Collections.singletonList("*"));
+                config.setAllowCredentials(true);
+                config.setMaxAge(3600L);
+
+                return config;
+            }
+        })
+        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .and().authorizeRequests()
             .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
             .antMatchers("/customer").hasAuthority(ADMIN_AUTHORITY)
             .antMatchers("/news").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
@@ -45,9 +66,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         .and()
         .formLogin()
         .and()
-        .httpBasic()
-        .and()
-        .csrf().disable();
+        .httpBasic();
     }
 
     @Override

@@ -14,11 +14,7 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/changelog-master.xml
 
-  h2:
-    console:
-      enabled: true
-
 default:
   admin:
     username: admin@springsecurebasic.net
-    password: $2a$10$RgG9AcJGEs5b6AvAPrZoFOAFiacb7EYc50EgF6lWcmjuLNwJ.JLm6
+    password: ${ADMIN_PASS:}
