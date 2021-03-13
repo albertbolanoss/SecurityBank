@@ -1,7 +1,8 @@
-package com.eazybytes.springsecuritybasic.configuration.inmemory.impl;
+package com.eazybytes.springsecuritybasic.configuration.impl;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,9 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Configuration
 public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager, UserDetailsPasswordService {
     protected final Log logger = LogFactory.getLog(getClass());
-    private final Map<String, InMemoryCustomUserDetailsImpl> users = new HashMap<>();
+
+    private final Map<String, CustomUserDetailsImpl> users = new HashMap<>();
 
     private AuthenticationManager authenticationManager;
 
@@ -33,15 +36,13 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
     @Override
     public void createUser(UserDetails user) {
         Assert.isTrue(!userExists(user.getUsername()), "User should not exist");
-        InMemoryCustomUserDetailsImpl userDetails = new InMemoryCustomUserDetailsImpl(user);
-
-        users.put(user.getUsername().toLowerCase(), userDetails);
+        users.put(user.getUsername().toLowerCase(), new CustomUserDetailsImpl(user));
     }
 
     @Override
     public void updateUser(UserDetails user) {
         Assert.isTrue(userExists(user.getUsername()), "User should exist");
-        users.put(user.getUsername().toLowerCase(), new InMemoryCustomUserDetailsImpl(user));
+        users.put(user.getUsername().toLowerCase(), new CustomUserDetailsImpl(user));
     }
 
     @Override
@@ -51,6 +52,7 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
 
     @Override
     public void changePassword(String oldPassword, String newPassword)  {
+        /*
         try {
             Authentication currentUser = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                     .orElseThrow(() -> new AccessDeniedException("Required authentication"));
@@ -64,13 +66,14 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
                 logger.debug("No Authentication Manager");
             }
 
-            InMemoryCustomUserDetailsImpl user = Optional.ofNullable(users.get(username)).orElseThrow(
+            CustomUserDetailsImpl user = Optional.ofNullable(users.get(username)).orElseThrow(
                     () -> new IllegalStateException());
             user.setPassword(newPassword);
 
         } catch (Exception e ) {
             logger.debug("Change password: " + e.getMessage());
         }
+         */
     }
 
     @Override
@@ -90,11 +93,14 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
 
     @Override
     public UserDetails updatePassword(UserDetails user, String newPassword) {
+        /*
         String username = user.getUsername();
-        InMemoryCustomUserDetailsImpl mutableUser = users.get(username.toLowerCase());
+        CustomUserDetailsImpl mutableUser = users.get(username.toLowerCase());
         mutableUser.setPassword(newPassword);
 
         return mutableUser;
+         */
+        return null;
     }
 
     public AuthenticationManager getAuthenticationManager() {
@@ -104,5 +110,4 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
-
 }
