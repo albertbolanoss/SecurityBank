@@ -1,0 +1,11 @@
+server:
+  port: 8443
+  ssl:
+    enable: true
+    key-store: src/main/resources/certificates/springsecury.p12
+    key-store-password:
+    keyStoreType: PKCS12
+    keyAlias: springsecurity
+
+application:
+  allowcors: https://localhost:3243

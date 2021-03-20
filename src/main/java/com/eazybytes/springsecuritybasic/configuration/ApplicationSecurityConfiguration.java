@@ -3,7 +3,6 @@ package com.eazybytes.springsecuritybasic.configuration;
 import com.eazybytes.springsecuritybasic.configuration.impl.CustomUserDetailsImpl;
 import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
 import com.eazybytes.springsecuritybasic.model.Customer;
-import org.apache.tomcat.util.file.ConfigurationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +19,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -32,32 +34,26 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     @Qualifier("inJdbcCustomUserDetailsManagerImpl")
     private UserDetailsManager userDetailsManager;
 
-    @Value( "${default.admin.username}" )
-    private String defaultAdminUsername;
+    @Value( "${application.admin.username}" )
+    private String adminUsername;
 
-    @Value( "${default.admin.password}" )
-    private String defaultAdminPassword;
+    @Value( "${application.admin.password}" )
+    private String adminPassword;
+
+    @Value("${application.allowCORS.urls}")
+    private List<String> allowCORSUrls;
+
+    @Value("${application.allowCORS.methods}")
+    private List<String> allowCORSmMethods;
 
     private final String ADMIN_AUTHORITY = AuthorityEnum.ADMIN.getName();
     private final String READ_AUTHORITY = AuthorityEnum.READ.getName();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
-        .cors().configurationSource(new CorsConfigurationSource() {
-            @Override
-            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                config.setAllowedMethods(Collections.singletonList("*"));
-                config.setAllowCredentials(true);
-                config.setMaxAge(3600L);
-
-                return config;
-            }
-        })
-        .and().csrf().csrfTokenRepository(new CookieCsrfTokenRepository())
+        .cors().configurationSource(createCORSConfiguration())
+        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()
             .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
             .antMatchers("/customer").hasAuthority(ADMIN_AUTHORITY)
@@ -72,8 +68,8 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         Customer customer = new Customer();
-        customer.setEmail(this.defaultAdminUsername);
-        customer.setPwd(this.defaultAdminPassword);
+        customer.setEmail(this.adminUsername);
+        customer.setPwd(this.adminPassword);
         customer.setRole(ADMIN_AUTHORITY);
         customer.setEnabled(true);
 
@@ -84,5 +80,21 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    public CorsConfigurationSource createCORSConfiguration() {
+        return new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(allowCORSUrls);
+                config.setAllowedMethods(allowCORSmMethods);
+                config.setAllowedHeaders(Collections.singletonList("*"));
+                config.setAllowCredentials(true);
+                config.setMaxAge(3600L);
+
+                return config;
+            }
+        };
     }
 }

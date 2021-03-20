@@ -42,3 +42,6 @@ mvnw.cmd
 
 ### Certifcates ###
 *.p12
+
+### environment.properties ###
+environment.properties
