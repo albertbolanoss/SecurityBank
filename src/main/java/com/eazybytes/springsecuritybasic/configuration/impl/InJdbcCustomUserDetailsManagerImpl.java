@@ -1,19 +1,17 @@
 package com.eazybytes.springsecuritybasic.configuration.impl;
 
 import com.eazybytes.springsecuritybasic.model.Customer;
-import com.eazybytes.springsecuritybasic.repository.CustomerRepository;
+import com.eazybytes.springsecuritybasic.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 
-import java.util.List;
-
 @Configuration
 public class InJdbcCustomUserDetailsManagerImpl implements UserDetailsManager {
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @Override
     public void createUser(UserDetails userDetails) {
@@ -24,7 +22,7 @@ public class InJdbcCustomUserDetailsManagerImpl implements UserDetailsManager {
             userDetails.isEnabled()
         );
 
-        customerRepository.save(customer);
+        this.customerService.save(customer);
     }
 
     @Override
@@ -44,20 +42,12 @@ public class InJdbcCustomUserDetailsManagerImpl implements UserDetailsManager {
 
     @Override
     public boolean userExists(String email) {
-        return this.customerRepository.existsByEmail(email);
+        return this.customerService.existsByEmail(email);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        List<Customer> customers = this.customerRepository.findByEmail(email);
-        Customer customer = null;
-
-        if (customers != null && !customers.isEmpty()) {
-            customer = customers.stream().findFirst().get();
-        } else {
-            throw new UsernameNotFoundException(String.format("the email (%s) does not exist", email));
-        }
-
+        Customer customer = this.customerService.findByEmail(email);
         return new CustomUserDetailsImpl(customer);
     }
 }
