@@ -19,8 +19,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,19 +44,17 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     @Value("${application.allowCORS.methods}")
     private List<String> allowCORSmMethods;
 
-    private final String ADMIN_AUTHORITY = AuthorityEnum.ADMIN.getName();
-    private final String READ_AUTHORITY = AuthorityEnum.READ.getName();
+    private final String CUSTOMER_AUTHORITY = AuthorityEnum.CUSTOMER.getName();
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
         .cors().configurationSource(createCORSConfiguration())
-        .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .and().csrf()
+            .ignoringAntMatchers("/contact")
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()
-            .antMatchers("/myAccount").hasAuthority(ADMIN_AUTHORITY)
-            .antMatchers("/customer").hasAuthority(ADMIN_AUTHORITY)
-            .antMatchers("/news").hasAnyAuthority(ADMIN_AUTHORITY, READ_AUTHORITY)
-            .antMatchers("/").permitAll()
+            .antMatchers("/user").hasAuthority(CUSTOMER_AUTHORITY)
         .and()
         .formLogin()
         .and()
@@ -70,7 +66,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
         Customer customer = new Customer();
         customer.setEmail(this.adminUsername);
         customer.setPwd(this.adminPassword);
-        customer.setRole(ADMIN_AUTHORITY);
+        customer.setRole(CUSTOMER_AUTHORITY);
         customer.setEnabled(true);
 
         this.userDetailsManager.createUser(new CustomUserDetailsImpl(customer));

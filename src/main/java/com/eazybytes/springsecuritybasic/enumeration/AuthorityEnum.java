@@ -1,8 +1,7 @@
 package com.eazybytes.springsecuritybasic.enumeration;
 
 public enum AuthorityEnum {
-    ADMIN("admin"),
-    READ("read");
+    CUSTOMER("customer");
 
     AuthorityEnum(String name) {
         this.name = name;
