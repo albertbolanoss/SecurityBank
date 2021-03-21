@@ -5,34 +5,29 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create_customer_table" author="lbolanoss">
-        <createTable tableName="customer">
+    <changeSet id="create_table_contact_messages" author="lbolanoss">
+        <createTable tableName="contact_messages">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
             </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="pwd" type="varchar(255)">
+
+            <column name="subject" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="role" type="varchar(255)">
+
+            <column name="message" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="enabled" type="boolean" defaultValueBoolean="true">
+
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-    </changeSet>
-
-    <changeSet id="create_unique_table" author="lbolanoss">
-        <addUniqueConstraint
-          columnNames="email"
-          constraintName="unique_customer_email"
-          deferrable="true"
-          disabled="false"
-          initiallyDeferred="true"
-          tableName="customer"
-          validate="true"/>
     </changeSet>
 </databaseChangeLog>
