@@ -20,6 +20,8 @@ This covers the following features:
 keytool -genkeypair -alias springsecureapp -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore springsecureapp.p12 -validity 3650
 ```
 
+For more information visit [This page](https://www.baeldung.com/spring-boot-https-self-signed-certificate) 
+
 ## How run the application  
 1. Create the following environment variables or set it in application.properties file:
     - "spring_datasource_password": the database password.
