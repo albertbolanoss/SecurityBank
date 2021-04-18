@@ -20,7 +20,7 @@ spring:
 application:
   admin:
     username: admin@springsecurebasic.net
-    password: $2a$10$RgG9AcJGEs5b6AvAPrZoFOAFiacb7EYc50EgF6lWcmjuLNwJ.JLm6
+    password:
   allowCORS:
     urls: http://localhost:4200
     methods: GET,POST,PUT,DELETE,OPTIONS
