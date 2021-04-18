@@ -50,7 +50,8 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     protected void configure(HttpSecurity http) throws Exception {
         http
         .cors().configurationSource(createCORSConfiguration())
-        .and().csrf()
+        .and()
+        .csrf()
             .ignoringAntMatchers("/contact")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()

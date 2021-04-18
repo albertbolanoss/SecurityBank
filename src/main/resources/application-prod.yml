@@ -8,4 +8,5 @@ server:
     keyAlias: springsecureapp
 
 application:
-  allowcors: https://localhost:3243
+  allowCORS:
+    urls: https://localhost:3243
