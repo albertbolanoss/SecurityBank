@@ -1,0 +1,2 @@
+email;pwd;role;enabled
+admin@springsecurebasic.net;$2a$10$RgG9AcJGEs5b6AvAPrZoFOAFiacb7EYc50EgF6lWcmjuLNwJ.JLm6;customer;true

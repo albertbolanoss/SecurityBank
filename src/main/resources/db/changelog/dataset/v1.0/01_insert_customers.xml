@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="lbolanoss" id="load-customers">
+        <loadData
+                  encoding="UTF-8"
+                  file="csv/customers.csv"
+                  quotchar="'"
+                  relativeToChangelogFile="true"
+                  separator=";"
+                  tableName="customers"
+                  primaryKey="id">
+            <column header="email"
+                    name="email"
+                    type="STRING"/>
+            <column header="pwd"
+                    name="pwd"
+                    type="STRING"/>
+            <column header="role"
+                    name="role"
+                    type="STRING"/>
+            <column header="enabled"
+                    name="enabled"
+                    type="BOOLEAN"/>
+        </loadData>
+    </changeSet>
+</databaseChangeLog>
