@@ -7,9 +7,6 @@
 
     <changeSet id="create_table_customers" author="lbolanoss">
         <createTable tableName="customers">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true"/>
-            </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
@@ -25,14 +22,12 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create_unique_customers_email" author="lbolanoss">
-        <addUniqueConstraint
-          columnNames="email"
-          constraintName="unique_customers_email"
-          deferrable="true"
-          disabled="false"
-          initiallyDeferred="true"
-          tableName="customers"
-          validate="true"/>
+    <changeSet id="create_customers_pk" author="lbolanoss">
+        <addPrimaryKey
+            clustered="true"
+            columnNames="email"
+            constraintName="customers_pk"
+            tableName="customers"
+            validate="true"/>
     </changeSet>
 </databaseChangeLog>

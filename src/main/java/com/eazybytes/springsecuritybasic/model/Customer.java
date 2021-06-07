@@ -1,8 +1,8 @@
 package com.eazybytes.springsecuritybasic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,9 +10,8 @@ import javax.persistence.Table;
 @Table(name = "customers")
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String email;
+    @JsonIgnore
     private String pwd;
     private String role;
     private Boolean enabled;
@@ -26,14 +25,6 @@ public class Customer {
         this.pwd = pwd;
         this.role = role;
         this.enabled = enabled;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {
