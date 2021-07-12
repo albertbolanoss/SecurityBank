@@ -1,6 +1,8 @@
 package com.eazybytes.springsecuritybasic.configuration.impl;
 
+import com.eazybytes.springsecuritybasic.model.Authority;
 import com.eazybytes.springsecuritybasic.model.Customer;
+import com.eazybytes.springsecuritybasic.model.Permission;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,17 +24,21 @@ public class CustomUserDetailsImpl implements UserDetails, UserDetailsPasswordSe
         this.customer.setEmail(userDetails.getUsername());
         this.customer.setPwd(userDetails.getPassword());
         this.customer.setEnabled(userDetails.isEnabled());
-        // this.customer.setPermissions();
+
+        List<Permission> permissions = userDetails.getAuthorities().stream()
+            .map(authority -> new Permission(
+                    null, new Authority(authority.getAuthority(), true), null))
+            .collect(Collectors.toList());
+
+        this.customer.setPermissions(permissions);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // List<GrantedAuthority> authorities = new ArrayList<>();
         List<GrantedAuthority> authorities = customer.getPermissions().stream()
-                .map(e -> new SimpleGrantedAuthority(e.getAuthority().getId()))
-                .collect(Collectors.toList());
-        // authorities.add(new SimpleGrantedAuthority(""));
-        // authorities.add(new SimpleGrantedAuthority(""));
+            .map(e -> new SimpleGrantedAuthority(e.getAuthority().getId()))
+            .collect(Collectors.toList());
+
         return authorities;
     }
 

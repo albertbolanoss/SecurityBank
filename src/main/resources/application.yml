@@ -21,6 +21,7 @@ application:
   admin:
     username: admin@springsecurebasic.net
     password:
+    authorities: READ,WRITE
   allowCORS:
     urls: http://localhost:4200
     methods: GET,POST,PUT,DELETE,OPTIONS

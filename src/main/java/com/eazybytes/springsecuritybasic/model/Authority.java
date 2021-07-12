@@ -15,7 +15,7 @@ public class Authority {
     public Authority() {
     }
 
-    public Authority(int String, Boolean enabled) {
+    public Authority(String id, Boolean enabled) {
         this.id = id;
         this.enabled = enabled;
     }

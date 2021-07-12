@@ -31,7 +31,6 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         Customer customer = customerService.findByEmail(username);
-
         if (customer != null) {
             if (passwordEncoder.matches(password, customer.getPwd())) {
                 List<GrantedAuthority> authorities = buildAuthorities(customer.getPermissions());

@@ -1,32 +1,48 @@
 package com.eazybytes.springsecuritybasic.configuration.impl;
 
+import com.eazybytes.springsecuritybasic.model.Authority;
+import com.eazybytes.springsecuritybasic.model.Customer;
+import com.eazybytes.springsecuritybasic.model.Permission;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.util.Assert;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
-public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager, UserDetailsPasswordService {
+public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager {
     protected final Log logger = LogFactory.getLog(getClass());
 
     private final Map<String, CustomUserDetailsImpl> users = new HashMap<>();
 
-    private AuthenticationManager authenticationManager;
+    @Autowired
+    public InMemoryCustomUserDetailsManagerImpl(@Value("${application.admin.username}") String adminUsername,
+                                                @Value("${application.admin.password}") String  adminPassword,
+                                                @Value("${application.admin.authorities}") String[] authorities) {
+        Customer customer = new Customer();
+        customer.setEmail(adminUsername);
+        customer.setPwd(adminPassword);
+        customer.setEnabled(true);
 
-    public InMemoryCustomUserDetailsManagerImpl(UserDetails... users) {
-        for (UserDetails user : users) {
-            createUser(user);
-        }
+        List<Permission> permissions = Arrays.asList(authorities).stream()
+                .map(authority ->  new Permission(null, new Authority(authority, true), null))
+                .collect(Collectors.toList());
+
+        customer.setPermissions(permissions);
+
+        createUser(new CustomUserDetailsImpl(customer));
     }
 
     @Override
@@ -48,28 +64,7 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
 
     @Override
     public void changePassword(String oldPassword, String newPassword)  {
-        /*
-        try {
-            Authentication currentUser = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                    .orElseThrow(() -> new AccessDeniedException("Required authentication"));
-            String username = currentUser.getName();
-
-
-            if (authenticationManager != null) {
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        username, oldPassword));
-            } else {
-                logger.debug("No Authentication Manager");
-            }
-
-            CustomUserDetailsImpl user = Optional.ofNullable(users.get(username)).orElseThrow(
-                    () -> new IllegalStateException());
-            user.setPassword(newPassword);
-
-        } catch (Exception e ) {
-            logger.debug("Change password: " + e.getMessage());
-        }
-         */
+       // pending for implement
     }
 
     @Override
@@ -85,25 +80,5 @@ public class InMemoryCustomUserDetailsManagerImpl implements UserDetailsManager,
         return new User(user.getUsername(), user.getPassword(), user.isEnabled(),
                 user.isAccountNonExpired(), user.isCredentialsNonExpired(),
                 user.isAccountNonLocked(), user.getAuthorities());
-    }
-
-    @Override
-    public UserDetails updatePassword(UserDetails user, String newPassword) {
-        /*
-        String username = user.getUsername();
-        CustomUserDetailsImpl mutableUser = users.get(username.toLowerCase());
-        mutableUser.setPassword(newPassword);
-
-        return mutableUser;
-         */
-        return null;
-    }
-
-    public AuthenticationManager getAuthenticationManager() {
-        return authenticationManager;
-    }
-
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
     }
 }
