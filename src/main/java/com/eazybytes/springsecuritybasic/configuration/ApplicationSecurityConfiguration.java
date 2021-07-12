@@ -32,7 +32,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 //    @Value( "${application.admin.password}" )
 //    private String adminPassword;
 
-    private final String CUSTOMER_AUTHORITY = AuthorityEnum.CUSTOMER.getName();
+//    private final String CUSTOMER_AUTHORITY = AuthorityEnum.CUSTOMER.getName();
 
     @Value("${application.allowCORS.urls}")
     private List<String> allowCORSUrls;
@@ -49,7 +49,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
             .ignoringAntMatchers("/contact")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()
-            .antMatchers("/user").hasAuthority(CUSTOMER_AUTHORITY)
+            .antMatchers("/user").hasAuthority(AuthorityEnum.READ.getName())
         .and()
         .formLogin()
         .and()

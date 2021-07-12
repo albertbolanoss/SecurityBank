@@ -3,8 +3,11 @@ package com.eazybytes.springsecuritybasic.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
@@ -15,6 +18,9 @@ public class Customer {
     private String pwd;
     private String role;
     private Boolean enabled;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+    private List<Permission> permissions;
 
     public Customer() {
 
@@ -57,5 +63,13 @@ public class Customer {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 }

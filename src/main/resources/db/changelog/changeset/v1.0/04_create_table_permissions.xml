@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_table_permissions" author="lbolanoss">
+        <createTable tableName="permissions">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="authority" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet  author="lbolanoss"  id="permissions_authority_fk">
+        <addForeignKeyConstraint  baseColumnNames="authority"
+          baseTableName="permissions"
+          constraintName="permissions_authority_fk"
+          onDelete="CASCADE"
+          onUpdate="CASCADE"
+          referencedColumnNames="id"
+          referencedTableName="authorities"
+          validate="true"/>
+    </changeSet>
+
+    <changeSet  author="lbolanoss"  id="permissions_customers_fk">
+        <addForeignKeyConstraint  baseColumnNames="customer"
+          baseTableName="permissions"
+          constraintName="permissions_customers_fk"
+          onDelete="CASCADE"
+          onUpdate="CASCADE"
+          referencedColumnNames="email"
+          referencedTableName="customers"
+          validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>
