@@ -19,9 +19,6 @@
             <column header="pwd"
                     name="pwd"
                     type="STRING"/>
-            <column header="role"
-                    name="role"
-                    type="STRING"/>
             <column header="enabled"
                     name="enabled"
                     type="BOOLEAN"/>

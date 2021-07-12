@@ -14,9 +14,10 @@ import java.util.List;
 public class Customer {
     @Id
     private String email;
+
     @JsonIgnore
     private String pwd;
-    private String role;
+
     private Boolean enabled;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
@@ -26,11 +27,11 @@ public class Customer {
 
     }
 
-    public Customer(String email, String pwd, String role, Boolean enabled) {
+    public Customer(String email, String pwd, Boolean enabled, List<Permission> permissions) {
         this.email = email;
         this.pwd = pwd;
-        this.role = role;
         this.enabled = enabled;
+        this.permissions = permissions;
     }
 
     public String getEmail() {
@@ -47,14 +48,6 @@ public class Customer {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public Boolean getEnabled() {

@@ -6,9 +6,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CustomUserDetailsImpl implements UserDetails, UserDetailsPasswordService {
     private final Customer customer;
@@ -21,14 +21,18 @@ public class CustomUserDetailsImpl implements UserDetails, UserDetailsPasswordSe
         this.customer = new Customer();
         this.customer.setEmail(userDetails.getUsername());
         this.customer.setPwd(userDetails.getPassword());
-        this.customer.setRole(userDetails.getAuthorities().stream().findFirst().get().getAuthority());
         this.customer.setEnabled(userDetails.isEnabled());
+        // this.customer.setPermissions();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(customer.getRole()));
+        // List<GrantedAuthority> authorities = new ArrayList<>();
+        List<GrantedAuthority> authorities = customer.getPermissions().stream()
+                .map(e -> new SimpleGrantedAuthority(e.getAuthority().getId()))
+                .collect(Collectors.toList());
+        // authorities.add(new SimpleGrantedAuthority(""));
+        // authorities.add(new SimpleGrantedAuthority(""));
         return authorities;
     }
 

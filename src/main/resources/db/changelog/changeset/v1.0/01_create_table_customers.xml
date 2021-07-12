@@ -13,9 +13,6 @@
             <column name="pwd" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="role" type="varchar(255)">
-                <constraints nullable="false"/>
-            </column>
             <column name="enabled" type="boolean" defaultValueBoolean="true">
                 <constraints nullable="false"/>
             </column>

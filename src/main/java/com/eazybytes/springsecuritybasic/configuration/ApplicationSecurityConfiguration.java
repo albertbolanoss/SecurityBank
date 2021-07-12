@@ -1,13 +1,17 @@
 package com.eazybytes.springsecuritybasic.configuration;
 
 import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,9 +26,9 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 //    @Qualifier("inMemoryCustomUserDetailsManagerImpl")
 //    private UserDetailsManager userDetailsManager;
 
-//    @Autowired
-//    @Qualifier("inJdbcCustomUserDetailsManagerImpl")
-//    private UserDetailsManager userDetailsManager;
+    @Autowired
+    @Qualifier("inJdbcCustomUserDetailsManagerImpl")
+    private UserDetailsManager userDetailsManager;
 
 //    @Value( "${application.admin.username}" )
 //    private String adminUsername;
@@ -57,17 +61,10 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
     }
 
 //    Enable if it going to use the UserDetailsManager
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        Customer customer = new Customer();
-//        customer.setEmail(this.adminUsername);
-//        customer.setPwd(this.adminPassword);
-//        customer.setRole(CUSTOMER_AUTHORITY);
-//        customer.setEnabled(true);
-//
-//        this.userDetailsManager.createUser(new CustomUserDetailsImpl(customer));
-//        auth.userDetailsService(this.userDetailsManager);
-//    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(this.userDetailsManager);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

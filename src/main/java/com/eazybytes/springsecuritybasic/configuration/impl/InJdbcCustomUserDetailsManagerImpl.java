@@ -18,8 +18,9 @@ public class InJdbcCustomUserDetailsManagerImpl implements UserDetailsManager {
         Customer customer = new Customer(
             userDetails.getUsername(),
             userDetails.getPassword(),
-            userDetails.getAuthorities().stream().findFirst().get().getAuthority(),
-            userDetails.isEnabled()
+            // userDetails.getAuthorities().stream().findFirst().get().getAuthority(),
+            userDetails.isEnabled(),
+                null
         );
 
         this.customerService.save(customer);
