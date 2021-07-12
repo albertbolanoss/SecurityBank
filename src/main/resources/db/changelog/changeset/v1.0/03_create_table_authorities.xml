@@ -5,13 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create_table_customers" author="lbolanoss">
-        <createTable tableName="customers">
-            <column name="email" type="varchar(255)">
+    <changeSet id="create_table_authorities" author="lbolanoss">
+        <createTable tableName="authorities">
+            <column name="id" type="varchar(255)">
                 <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="pwd" type="varchar(255)">
-                <constraints nullable="false"/>
             </column>
             <column name="enabled" type="boolean" defaultValueBoolean="true">
                 <constraints nullable="false"/>

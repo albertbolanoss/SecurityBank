@@ -6,4 +6,7 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <include  file="db\changelog\changeset\v1.0\01_create_table_customers.xml"/>
     <include  file="db\changelog\changeset\v1.0\02_create_table_contact_messages.xml"/>
+    <include file="db\changelog\changeset\v1.0\03_create_table_authorities.xml" />
+    <include file="db\changelog\changeset\v1.0\04_create_table_permissions.xml" />
+
 </databaseChangeLog>

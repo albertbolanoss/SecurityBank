@@ -18,27 +18,28 @@ import java.util.List;
 
 @Configuration
 public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapter {
-//    @Autowired
-//    @Qualifier("inMemoryCustomUserDetailsManagerImpl")
-//    private UserDetailsManager userDetailsManager;
-
-//    @Autowired
-//    @Qualifier("inJdbcCustomUserDetailsManagerImpl")
-//    private UserDetailsManager userDetailsManager;
-
-//    @Value( "${application.admin.username}" )
-//    private String adminUsername;
-//
-//    @Value( "${application.admin.password}" )
-//    private String adminPassword;
-
-    private final String CUSTOMER_AUTHORITY = AuthorityEnum.CUSTOMER.getName();
-
     @Value("${application.allowCORS.urls}")
     private List<String> allowCORSUrls;
 
     @Value("${application.allowCORS.methods}")
     private List<String> allowCORSmMethods;
+
+    /**
+     * The user detail manager
+     * Uncomment Autowired to injection the user details manager
+     * Uncomment and set Qualifier to specify the implementation
+     *  inMemoryCustomUserDetailsManagerImpl: in memory custom user details manager implementation
+     *  inJdbcCustomUserDetailsManagerImpl: in JDBC custom user details manager implementation
+     */
+//    @Autowired
+//    @Qualifier("inMemoryCustomUserDetailsManagerImpl")
+//    private UserDetailsManager userDetailsManager;
+//
+//    // Uncomment if it going to User Details Manager
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(this.userDetailsManager);
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,25 +50,12 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
             .ignoringAntMatchers("/contact")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()
-            .antMatchers("/user").hasAuthority(CUSTOMER_AUTHORITY)
+            .antMatchers("/user").hasAuthority(AuthorityEnum.READ.getName())
         .and()
         .formLogin()
         .and()
         .httpBasic();
     }
-
-//    Enable if it going to use the UserDetailsManager
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        Customer customer = new Customer();
-//        customer.setEmail(this.adminUsername);
-//        customer.setPwd(this.adminPassword);
-//        customer.setRole(CUSTOMER_AUTHORITY);
-//        customer.setEnabled(true);
-//
-//        this.userDetailsManager.createUser(new CustomUserDetailsImpl(customer));
-//        auth.userDetailsService(this.userDetailsManager);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -22,7 +22,6 @@ public class LoginController {
 		ResponseEntity responseEntity;
 		try {
 			Customer customer = customerService.findByEmail(principal.getName());
-			customer.setPwd("");
 			responseEntity = new ResponseEntity<>(customer, HttpStatus.OK);
 		} catch (UsernameNotFoundException usernameNotFoundException) {
 			responseEntity = new ResponseEntity<>(usernameNotFoundException.getMessage(), HttpStatus.NOT_FOUND);

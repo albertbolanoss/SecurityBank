@@ -4,24 +4,21 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="lbolanoss" id="load-customers">
+    <changeSet author="lbolanoss" id="load-permissions">
         <loadData
                   encoding="UTF-8"
-                  file="csv/customers.csv"
+                  file="csv/permissions.csv"
                   quotchar="'"
                   relativeToChangelogFile="true"
                   separator=";"
-                  tableName="customers"
+                  tableName="permissions"
                   primaryKey="id">
-            <column header="email"
-                    name="email"
+            <column header="authority"
+                    name="authority"
                     type="STRING"/>
-            <column header="pwd"
-                    name="pwd"
+            <column header="customer"
+                    name="customer"
                     type="STRING"/>
-            <column header="enabled"
-                    name="enabled"
-                    type="BOOLEAN"/>
         </loadData>
     </changeSet>
 </databaseChangeLog>

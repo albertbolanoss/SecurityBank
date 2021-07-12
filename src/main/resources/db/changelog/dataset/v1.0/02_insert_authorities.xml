@@ -4,20 +4,17 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="lbolanoss" id="load-customers">
+    <changeSet author="lbolanoss" id="load-authorities">
         <loadData
                   encoding="UTF-8"
-                  file="csv/customers.csv"
+                  file="csv/authorities.csv"
                   quotchar="'"
                   relativeToChangelogFile="true"
                   separator=";"
-                  tableName="customers"
+                  tableName="authorities"
                   primaryKey="id">
-            <column header="email"
-                    name="email"
-                    type="STRING"/>
-            <column header="pwd"
-                    name="pwd"
+            <column header="id"
+                    name="id"
                     type="STRING"/>
             <column header="enabled"
                     name="enabled"
