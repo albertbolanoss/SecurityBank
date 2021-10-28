@@ -1,3 +1,5 @@
 id;enabled
 READ;true
 WRITE;true
+ROLE_ADMIN;true
+ROLE_USER;true

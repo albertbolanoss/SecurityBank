@@ -1,6 +1,7 @@
 package com.eazybytes.springsecuritybasic.configuration;
 
 import com.eazybytes.springsecuritybasic.enumeration.AuthorityEnum;
+import com.eazybytes.springsecuritybasic.enumeration.RoleEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and().authorizeRequests()
             .antMatchers("/user").hasAuthority(AuthorityEnum.READ.getName())
+            .antMatchers("/getAdminInfo").hasRole(RoleEnum.ADMINISTRATOR.getName())
         .and()
         .formLogin()
         .and()

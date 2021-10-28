@@ -1,2 +1,3 @@
 authority;customer
-READ;admin@springsecurebasic.net
+ROLE_ADMIN;admin@springsecurebasic.net
+READ;user@springsecurebasic.net
